@@ -4,8 +4,11 @@ import com.example.demo.dto.ArticleDTO;
 import com.example.demo.entity.Article;
 import com.example.demo.global.RsData.RsData;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import lombok.Data;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -44,9 +47,17 @@ public class ApiV1ArticleController {
         return RsData.of("200", "단건 조회 성공", article);
     }
 
+    @Data
+    public static class ArticleRequest {
+        @NotBlank
+        private String subject;
+        @NotBlank
+        private String content;
+    }
+
     @PostMapping("")
-    public RsData create(@RequestParam("subject") String subject, @RequestParam("content") String content) {
-        Article article3 = new Article(subject, content);
+    public RsData create(@Valid @RequestBody ArticleRequest articleRequest) {
+        Article article3 = new Article(articleRequest.subject, articleRequest.content);
         ArticleDTO articleDTO3 = new ArticleDTO(article3);
         this.articleDTOList.add(articleDTO3);
         return RsData.of("200", "생성 성공", this.articleDTOList.get(this.articleDTOList.size()-1));
