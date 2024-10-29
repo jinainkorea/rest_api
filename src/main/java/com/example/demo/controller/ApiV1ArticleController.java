@@ -64,9 +64,9 @@ public class ApiV1ArticleController {
     }
 
     @PatchMapping("/{id}")
-    public RsData<ArticleDTO> modify(@PathVariable("id")int id, @RequestParam("subject") String subject, @RequestParam("content") String content) {
+    public RsData<ArticleDTO> modify(@PathVariable("id")int id, @Valid @RequestBody ArticleRequest articleRequest) {
         this.delete(id);
-        Article article3 = new Article(subject, content);
+        Article article3 = new Article(articleRequest.subject, articleRequest.content);
         ArticleDTO articleDTO3 = new ArticleDTO(article3);
         this.articleDTOList.add(id-1, articleDTO3);
 
