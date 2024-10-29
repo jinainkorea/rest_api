@@ -1,9 +1,8 @@
-package com.example.demo.dto;
+package com.example.demo.Article.dto;
 
 
-import com.example.demo.entity.Article;
+import com.example.demo.Article.entity.Article;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;

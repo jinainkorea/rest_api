@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.Article.entity;
 
 import com.example.demo.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
