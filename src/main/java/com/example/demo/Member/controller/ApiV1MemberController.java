@@ -30,6 +30,8 @@ public class ApiV1MemberController {
 
     private final JwtProvider jwtProvider;
 
+    private final String loginToken = "loginToken";
+
     @PostMapping("/join")
     public RsData join(@Valid @RequestBody MemberRequest memberRequest) {
         String username = memberRequest.getUsername();
@@ -53,21 +55,21 @@ public class ApiV1MemberController {
 
 //    JWT 토큰의 인증, 인가 사용
     @PostMapping("/login")
-    public String login (@Valid @RequestBody MemberRequest memberRequest, HttpServletResponse httpServletResponse) {
+    public RsData login (@Valid @RequestBody MemberRequest memberRequest, HttpServletResponse httpServletResponse) {
         Member member = this.memberService.getMemberByName(memberRequest.getUsername());
-        String jwtToken = this.jwtProvider.genToken(member, 5);
+        String jwtToken = this.jwtProvider.genToken(member, 15);
 
-        httpServletResponse.addCookie(new Cookie("loginToken", jwtToken));
+        httpServletResponse.addCookie(new Cookie(loginToken, jwtToken));
 
-        return jwtToken;
+        return RsData.of("200", "로그인 성공", jwtToken);
     }
 
     @GetMapping("/me")
-    public String me (HttpServletRequest req) {
+    public RsData me (HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
         String accessToken = "";
         for (Cookie cookie : cookies) {
-            if ("loginToken".equals(cookie.getName())) {
+            if (loginToken.equals(cookie.getName())) {
                 accessToken = cookie.getValue();
             }
         }
@@ -76,22 +78,31 @@ public class ApiV1MemberController {
 
         System.out.println(checkedToken);
         if (!checkedToken) {
-            return "유효성 검증 실패";
+            return RsData.of("400", "유효성 검증 실패");
         }
 
         Map<String, Object> claims = jwtProvider.getClaims(accessToken);
         claims.get("id");
         claims.get("username");
 
-        return (String) claims.get("username");
+        return RsData.of("200", "사용자 정보 : ", (String) claims.get("username"));
     }
 
+//    @GetMapping("/logout")
+//    public RsData logout(HttpSession httpSession) {
+//        if (httpSession.getAttribute("USER ID") == null) {
+//            return RsData.of("400", "이미 로그아웃 상태입니다.");
+//        }
+//        httpSession.invalidate();
+//        return RsData.of("200", "로그아웃 성공");
+//    }
+
     @GetMapping("/logout")
-    public RsData logout(HttpSession httpSession) {
-        if (httpSession.getAttribute("USER ID") == null) {
-            return RsData.of("400", "이미 로그아웃 상태입니다.");
-        }
-        httpSession.invalidate();
+    public RsData logout(HttpServletResponse res) {
+        Cookie cookie = new Cookie(loginToken, null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        res.addCookie(cookie);
         return RsData.of("200", "로그아웃 성공");
     }
 }

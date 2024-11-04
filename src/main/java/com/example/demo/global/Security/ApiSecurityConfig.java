@@ -22,6 +22,7 @@ public class ApiSecurityConfig {
                                 .requestMatchers("/api/*/articles").permitAll()
                                 .requestMatchers("/api/*/articles/*").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/*/members/login").permitAll() // 로그인은 누구나 가능, post 요청만 허용
+                                .requestMatchers(HttpMethod.GET, "/api/*/members/logout").permitAll() // 로그아웃은 누구나 가능, get 요청만 허용
                                 .requestMatchers(HttpMethod.GET, "/api/*/members/me").permitAll()
                                 .anyRequest().authenticated()
                 )
