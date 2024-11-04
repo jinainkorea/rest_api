@@ -1,5 +1,6 @@
 package com.example.demo.Article.request;
 
+import com.example.demo.Member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -11,4 +12,6 @@ public class ArticleCreateRequest {
     private String subject;
     @NotBlank
     private String content;
+    @NotBlank
+    private String author;
 }

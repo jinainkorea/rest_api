@@ -1,7 +1,10 @@
 package com.example.demo.Article.entity;
 
+import com.example.demo.Member.entity.Member;
 import com.example.demo.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -15,4 +18,8 @@ public class Article extends BaseEntity {
     private String subject;
 
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id") // 외래키 설정
+    private Member member;
 }

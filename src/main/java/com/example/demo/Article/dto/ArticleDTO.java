@@ -2,6 +2,7 @@ package com.example.demo.Article.dto;
 
 
 import com.example.demo.Article.entity.Article;
+import com.example.demo.Member.entity.Member;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -16,6 +17,8 @@ public class ArticleDTO {
 
     private final String content;
 
+    private final String author;
+
     private final LocalDateTime createdDate;
 
     private final LocalDateTime modifiedDate;
@@ -24,6 +27,7 @@ public class ArticleDTO {
         this.id = article.getId();
         this.subject = article.getSubject();
         this.content = article.getContent();
+        this.author = article.getMember() != null ? article.getMember().getUsername() : "Unknown"; // null 체크 추가
         this.createdDate = article.getCreatedDate();
         this.modifiedDate = article.getModifiedDate();
     }

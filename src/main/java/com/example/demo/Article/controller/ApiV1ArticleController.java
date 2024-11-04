@@ -5,6 +5,7 @@ import com.example.demo.Article.entity.Article;
 import com.example.demo.Article.request.ArticleModifyRequest;
 import com.example.demo.Article.service.ArticleService;
 import com.example.demo.Article.request.ArticleCreateRequest;
+import com.example.demo.Member.service.MemberService;
 import com.example.demo.global.RsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +23,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @Tag(name="ApiV1Controller", description = "api")
 public class ApiV1ArticleController {
     private final ArticleService articleService;
+    private final MemberService memberService;
 
     @GetMapping("")
     @Operation(summary = "게시글 다건 조회")
@@ -40,7 +42,7 @@ public class ApiV1ArticleController {
     @PostMapping("")
     @Operation(summary = "게시글 생성")
     public RsData create(@Valid @RequestBody ArticleCreateRequest articleCreateRequest) {
-        Article article = new Article(articleCreateRequest.getSubject(), articleCreateRequest.getContent());
+        Article article = new Article(articleCreateRequest.getSubject(), articleCreateRequest.getContent(), this.memberService.getMemberByName(articleCreateRequest.getAuthor()));
         ArticleDTO articleDTO = new ArticleDTO(article);
         this.articleService.create(articleDTO.getSubject(), articleDTO.getContent());
         return RsData.of("200", "생성 성공", articleDTO);
