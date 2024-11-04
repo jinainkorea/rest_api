@@ -7,11 +7,17 @@ import com.example.demo.Member.service.MemberService;
 import com.example.demo.global.RsData.RsData;
 import com.example.demo.global.jwt.JwtProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.Map;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -47,9 +53,37 @@ public class ApiV1MemberController {
 
 //    JWT 토큰의 인증, 인가 사용
     @PostMapping("/login")
-    public String login (@Valid @RequestBody MemberRequest memberRequest, HttpSession httpSession) {
-        Member member = memberService.getMemberByName("admin");
-        return jwtProvider.generateAccessToken(member, 10);
+    public String login (@Valid @RequestBody MemberRequest memberRequest, HttpServletResponse httpServletResponse) {
+        Member member = this.memberService.getMemberByName(memberRequest.getUsername());
+        String jwtToken = this.jwtProvider.genToken(member, 5);
+
+        httpServletResponse.addCookie(new Cookie("loginToken", jwtToken));
+
+        return jwtToken;
+    }
+
+    @GetMapping("/me")
+    public String me (HttpServletRequest req) {
+        Cookie[] cookies = req.getCookies();
+        String accessToken = "";
+        for (Cookie cookie : cookies) {
+            if ("loginToken".equals(cookie.getName())) {
+                accessToken = cookie.getValue();
+            }
+        }
+
+        boolean checkedToken = jwtProvider.verify(accessToken);
+
+        System.out.println(checkedToken);
+        if (!checkedToken) {
+            return "유효성 검증 실패";
+        }
+
+        Map<String, Object> claims = jwtProvider.getClaims(accessToken);
+        claims.get("id");
+        claims.get("username");
+
+        return (String) claims.get("username");
     }
 
     @GetMapping("/logout")
