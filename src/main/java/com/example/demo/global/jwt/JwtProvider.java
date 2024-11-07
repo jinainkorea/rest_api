@@ -1,6 +1,6 @@
 package com.example.demo.global.jwt;
 
-import com.example.demo.Member.entity.Member;
+import com.example.demo.Domain.Member.entity.Member;
 import com.example.demo.global.Util.Util;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

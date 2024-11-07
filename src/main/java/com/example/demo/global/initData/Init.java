@@ -1,7 +1,7 @@
 package com.example.demo.global.initData;
 
-import com.example.demo.Article.service.ArticleService;
-import com.example.demo.Member.service.MemberService;
+import com.example.demo.Domain.Article.service.ArticleService;
+import com.example.demo.Domain.Member.service.MemberService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
