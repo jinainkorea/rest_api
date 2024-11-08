@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"; // Link 컴포넌트를 임포트
 
 function ArticleList() {
   const [articleList, setAritlceList] = useState([])
@@ -17,7 +18,7 @@ function ArticleList() {
       <ul>
         {articleList.map((article) => (
           <li key={article.id}>
-            {article.id} / {article.subject} / {article.content} / {article.author}
+            <Link to={`/article/${article.id}`}>{article.id} / {article.subject} / {article.content} / {article.author}</Link>
           </li>
         ))}
       </ul>
